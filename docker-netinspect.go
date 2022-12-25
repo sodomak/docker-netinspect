@@ -13,7 +13,6 @@ import (
 func main() {
 
 	var contname string
-	var ip string
 
 	switch len(os.Args) {
 	case 2:
@@ -38,8 +37,9 @@ func main() {
 	for _, container := range containers {
 		if strings.Contains(container.Names[0], contname) {
 			fmt.Printf("%s\t", container.Names[0][1:])
-			ip = container.NetworkSettings.Networks["bridge"].IPAddress
-			fmt.Printf("%s\n", ip)
+			for _, v := range container.NetworkSettings.Networks {
+				fmt.Printf("%s\n", v.IPAddress)
+			}
 		}
 	}
 }
