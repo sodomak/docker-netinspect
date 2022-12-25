@@ -13,16 +13,16 @@ import (
 func main() {
 
 	var contname string
+	var ip string
 
-	if len(os.Args) > 2 {
+	switch len(os.Args) {
+	case 2:
+		contname = string(os.Args[1])
+	case 1:
+		contname = ""
+	default:
 		fmt.Println("Usage: ", os.Args[0], "[cont_name]")
 		return
-	}
-
-	if len(os.Args) > 1 {
-		contname = string(os.Args[1])
-	} else {
-		contname = ""
 	}
 
 	cli, err := client.NewClientWithOpts(client.FromEnv)
@@ -38,9 +38,8 @@ func main() {
 	for _, container := range containers {
 		if strings.Contains(container.Names[0], contname) {
 			fmt.Printf("%s\t", container.Names[0][1:])
-			for _, v := range container.NetworkSettings.Networks {
-				fmt.Printf("%s\n", v.IPAddress)
-			}
+			ip = container.NetworkSettings.Networks["bridge"].IPAddress
+			fmt.Printf("%s\n", ip)
 		}
 	}
 }
