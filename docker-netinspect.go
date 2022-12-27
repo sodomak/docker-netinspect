@@ -37,6 +37,7 @@ func main() {
 	for _, container := range containers {
 		if strings.Contains(container.Names[0], contname) {
 			fmt.Printf("%s\t", container.Names[0][1:])
+			//TODO: Better solution? We need to iterate the networks due to different names on different systems
 			for _, v := range container.NetworkSettings.Networks {
 				fmt.Printf("%s\n", v.IPAddress)
 			}
