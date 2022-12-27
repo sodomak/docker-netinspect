@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -10,9 +11,28 @@ import (
 	"github.com/docker/docker/client"
 )
 
+const VERSION string = "1.1"
+
 func main() {
 
 	var contname string
+	var show_version bool
+	var show_help bool
+
+	flag.BoolVar(&show_version, "V", false, "Print version and exit")
+	flag.BoolVar(&show_help, "h", false, "Print help and exit")
+
+	flag.Parse()
+
+	if show_version {
+		fmt.Println("Version: ", VERSION)
+		return
+	}
+
+	if show_help {
+		help()
+		return
+	}
 
 	switch len(os.Args) {
 	case 2:
@@ -20,7 +40,7 @@ func main() {
 	case 1:
 		contname = ""
 	default:
-		fmt.Println("Usage: ", os.Args[0], "[cont_name]")
+		help()
 		return
 	}
 
@@ -43,4 +63,19 @@ func main() {
 			}
 		}
 	}
+}
+
+func help() {
+	fmt.Println()
+	fmt.Println("Usage: ", os.Args[0], "[<flag>] [cont_name]")
+	fmt.Println()
+	fmt.Println("Args: ")
+	flag.PrintDefaults()
+	//flag.Usage()
+	fmt.Println()
+	fmt.Println("App version:", VERSION)
+	fmt.Println()
+	fmt.Println("Source: https://github.com/sodomak/docker-netinspect")
+	fmt.Println()
+	return
 }
